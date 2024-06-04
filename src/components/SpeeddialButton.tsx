@@ -3,12 +3,16 @@ import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
 import ForumIcon from "@mui/icons-material/Forum";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import { useState } from "react";
-import PopoverInbox from "./Modal/ModalInbox";
+import ModalInbox from "./Modal/ModalInbox";
 import ModalTask from "./Modal/ModalTask";
+import ContainerInbox from "./Inbox/ContainerInbox";
+import { InboxType } from "../libs/Types/inbox.type";
+import { dataInbox } from "../libs/Data/Inbox";
 
 const SpeeddialButton = () => {
     const [openModalInbox, setOpenModalInbox] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [dataDetail, setDataDetail] = useState<InboxType | null>(null);
 
   const handleOpen = () => {
     setOpenModalInbox(true);
@@ -24,6 +28,21 @@ const SpeeddialButton = () => {
 
   const handleCloseModal = () => {
     setOpenModal(false);
+  };
+
+  const [openInbox, setOpenInbox] = useState(false);
+
+  const handleOpenInbox = (id: number) => {
+    setOpenInbox(true);
+    
+    const dataDetail = dataInbox.find((item) => item.id === id);
+    if(dataDetail){
+      setDataDetail(dataDetail);
+    }
+  };
+
+  const handleCloseInbox = () => {
+    setOpenInbox(false);
   };
 
   const actions = [
@@ -49,8 +68,9 @@ const SpeeddialButton = () => {
           />
         ))}
       </SpeedDial>
-      <PopoverInbox open={openModalInbox} handleClose={handleClose} />
+      <ModalInbox open={openModalInbox} handleClose={handleClose} handleOpenInbox={handleOpenInbox} />
       <ModalTask open={openModal} handleClose={handleCloseModal} />
+      <ContainerInbox open={openInbox} handleClose={handleCloseInbox} dataDetail={dataDetail} />
     </Box>
   );
 };

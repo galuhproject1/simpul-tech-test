@@ -1,33 +1,32 @@
 import {
-  Avatar,
   Box,
-  Divider,
   InputAdornment,
-  List,
-  ListItem,
   Modal,
   TextField,
-  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import ListInbox from "../Inbox/ListInbox";
+import { dataInbox } from "../../libs/Data/Inbox";
 
 type Props = {
   open: boolean;
   handleClose: () => void;
+  handleOpenInbox: (_id: number) => void;
 };
 
 const style = {
   position: "absolute",
   bottom: "18%",
   right: "4%",
-  width: 400,
+  width: 734,
   height: 420,
   borderRadius: 1,
   boxShadow: 2,
   paddingY: 2,
 };
 
-const ModalInbox = ({ open, handleClose }: Props) => {
+const ModalInbox = ({ open, handleClose, handleOpenInbox }: Props) => {
+  
   return (
     <Modal
       open={open}
@@ -56,22 +55,7 @@ const ModalInbox = ({ open, handleClose }: Props) => {
           }}
           size="small"
         />
-        <List sx={{ width: "100%", cursor: "pointer" }}>
-          <ListItem sx={{ display: "flex", gap: 2, alignItems: "start" }}>
-            <Box>
-              <Avatar sx={{ bgcolor: "#2F80ED" }}>H</Avatar>
-            </Box>
-            <Box>
-              <Typography sx={{ fontWeight: 700, fontSize: 14, color: "#2F80ED" }}>101992-Naturalization</Typography>
-              <Typography sx={{ fontWeight: 700, fontSize: 12 }}>Ellen:</Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: 12 }}>Iam the best</Typography>
-            </Box>
-            <Box>
-              <Typography sx={{ fontWeight: 400, fontSize: 12 }}>10/10/2022 10:00</Typography>
-            </Box>
-          </ListItem>
-        </List>
-        <Divider variant="middle" />
+        <ListInbox handleOpenInbox={(id: number) => handleOpenInbox(id)} dataInbox={dataInbox} />
       </Box>
     </Modal>
   );
