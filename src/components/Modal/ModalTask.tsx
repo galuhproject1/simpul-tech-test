@@ -1,10 +1,8 @@
 import {
   Box,
   Button,
-  // Checkbox,
   Divider,
   FormControl,
-  // IconButton,
   InputLabel,
   List,
   ListItem,
@@ -12,14 +10,10 @@ import {
   Modal,
   Select,
   SelectChangeEvent,
-  // Tooltip,
-  // Typography,
 } from "@mui/material";
 import { useState } from "react";
 import Accordion from "../Task/Accordion";
 import { tasks } from "../../libs/Data/Tasks";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 type Props = {
   open: boolean;
