@@ -1,12 +1,14 @@
 import { Box, Button, Divider, IconButton, Popover, Typography } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
+import { getBgColorChat } from "../../utils/bgColor";
 
 type Props = {
   sender: string | undefined;
   message: string | undefined;
+  date: string;
 };
-const Chat = ({ sender, message }: Props) => {
+const Chat = ({ sender, message, date }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClickMore = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -66,7 +68,7 @@ const Chat = ({ sender, message }: Props) => {
         <Box
           sx={{
             width: "70%",
-            bgcolor: sender === "You" ? "#EEDCFF" : "#FCEED3",
+            bgcolor: sender ? getBgColorChat(sender) : "#FFFFFF",
             borderRadius: 1,
             p: 1,
             color: "#4F4F4F",
@@ -75,7 +77,7 @@ const Chat = ({ sender, message }: Props) => {
           <Typography sx={{ fontWeight: 400, fontSize: 14 }}>
             {message}
           </Typography>
-          <Typography sx={{ fontWeight: 400, fontSize: 12 }}>19:02</Typography>
+          <Typography sx={{ fontWeight: 400, fontSize: 12 }}>{date}</Typography>
         </Box>
       </Box>
     </Box>

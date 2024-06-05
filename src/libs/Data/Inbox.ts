@@ -52,6 +52,17 @@ export const dataInbox: InboxType[] = [
           }
         ],
       },
+      {
+        date: "June, 10 2021",
+        detailInbox: [
+          {
+            id: 1,
+            sender: "Obaidullah Amarkhil",
+            message: "Morning. I’ll try to do them. Thanks",
+            date: "June, 10 2021 19:11",
+          },
+        ],
+      },
     ],
   },
   {
@@ -133,15 +144,15 @@ export const dataInbox: InboxType[] = [
         detailInbox: [
           {
             id: 1,
-            sender: "You",
+            sender: "FastVisa Support",
             message:
-              "No worries. It will be completed ASAP. I've asked him yesterday.",
+              "Hey there. Welcome to your inbox! Contact us for more information and help about anything! We’ll send you a response as soon as possible.",
             date: "Today June 09, 2021 19:32",
           },
           {
             id: 2,
-            sender: "Mary Hilda",
-            message: "Hello Obaidullah, I will be your case advisor...",
+            sender: "You",
+            message: "Hi, I need help with something can you help me ?",
             date: "Today June 09, 2021 19:32",
           },
         ],

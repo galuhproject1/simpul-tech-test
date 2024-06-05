@@ -22,3 +22,18 @@ export const getBgColor = (value: string): string => {
       return "#FFFFFF"; // Default color if no match is found
   }
 };
+
+export const getBgColorChat = (value: string): string => {
+  switch (value) {
+    case "You":
+      return "#EEDCFF";
+    case "Mary Hilda":
+      return "#FCEED3";
+    case "Obaidullah Amarkhil":
+      return "#D2F2EA";
+    case "FastVisa Support":
+      return "#F8F8F8";
+    default:
+      return "#FCEED3"; // Default color if no match is found
+  }
+};

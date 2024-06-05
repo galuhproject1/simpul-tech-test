@@ -7,7 +7,7 @@ type Props = {
 
 const AlertWaiting = ({isLoading}: Props) => {
   return (
-    <Box sx={{ width: "100%", px: 2, position: "absolute", bottom: "14%" }}>
+    <Box sx={{ width: "100%", pl: 2, pr: 4, position: "absolute", bottom: "14%" }}>
       <Alert
         severity="info"
         icon={false}
