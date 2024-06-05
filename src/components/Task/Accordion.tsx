@@ -37,7 +37,6 @@ const Accordion = ({ dataTask }: Props) => {
     useState<HTMLButtonElement | null>(null);
 
   const [selectedBookmark, setSelectedBookmark] = useState<string[]>([]);
-  console.log(selectedBookmark);
 
   const handleClickAccordion = () => {
     setIsOpen(!isOpen);
@@ -80,10 +79,6 @@ const Accordion = ({ dataTask }: Props) => {
       setDescription(description);
     }
   }, [isEdit, description]);
-
-  // const handleAddBookmark = (value) => {
-  //   selectedValue(value);
-  // }
 
   return (
     <div>
@@ -240,6 +235,7 @@ const Accordion = ({ dataTask }: Props) => {
             <List sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
               {selectedBookmark.map((bookmark, index) => (
                 <ListItem
+                  button
                   key={index}
                   sx={{
                     fontSize: 12,
@@ -270,6 +266,7 @@ const Accordion = ({ dataTask }: Props) => {
                 return (
                   <List sx={{ p: 1 }} key={bookmark.id}>
                     <ListItem
+                    button
                       sx={{
                         cursor: "pointer",
                         fontSize: 12,

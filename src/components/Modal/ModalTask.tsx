@@ -11,9 +11,10 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "../Task/Accordion";
 import { tasks } from "../../libs/Data/Tasks";
+import Loading from "../Loading";
 
 type Props = {
   open: boolean;
@@ -34,11 +35,24 @@ const style = {
 
 const ModalTask = ({ open, handleClose }: Props) => {
   const [objective, setObjective] = useState("");
-  // const [isLoading, setIsLoading] = useState(true);
+  const [taskByObjective, setTaskByObjective] = useState(tasks);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event: SelectChangeEvent) => {
     setObjective(event.target.value as string);
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    if (objective === "") {
+      setTaskByObjective(tasks);
+    } else {
+      setTaskByObjective(tasks.filter((task) => task.objective === objective));
+    }
+  }, [objective]);
 
   return (
     <Modal
@@ -76,11 +90,10 @@ const ModalTask = ({ open, handleClose }: Props) => {
                   height: 30,
                   "& .MuiMenu-paper-root": { outline: "1px solid black" },
                 }}
-                defaultValue=""
               >
-                <MenuItem value={10}>Personal Errands</MenuItem>
+                <MenuItem value={"Personal Errands"}>Personal Errands</MenuItem>
                 <Divider />
-                <MenuItem value={20}>Urgent To-do</MenuItem>
+                <MenuItem value={"Urgent To-do"}>Urgent To-do</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -93,17 +106,17 @@ const ModalTask = ({ open, handleClose }: Props) => {
           </Button>
         </Box>
 
-        
         {/* list */}
         <Box sx={{ height: 300, overflow: "auto" }}>
-        {tasks.map((task) => (
-        <List sx={{ width: "100%", cursor: "pointer" }} key={task.id}>
-          <ListItem>
-            <Accordion dataTask={task} />
-          </ListItem>
-          <Divider variant="middle" />
-        </List>
-        ))}
+          {isLoading && <Loading loadingFor="Tasks List" />}
+          {taskByObjective.map((task) => (
+            <List sx={{ width: "100%", cursor: "pointer" }} key={task.id}>
+              <ListItem button>
+                <Accordion dataTask={task} />
+              </ListItem>
+              <Divider variant="middle" />
+            </List>
+          ))}
         </Box>
       </Box>
     </Modal>
