@@ -3,10 +3,13 @@ import {
   Button,
   Checkbox,
   IconButton,
+  List,
+  ListItem,
   Popover,
+  TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -17,6 +20,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { TaskType } from "../../libs/Types/task.type";
+import BookmarksOutlinedIcon from "@mui/icons-material/BookmarksOutlined";
+import { bookmarks } from "../../libs/Data/Tasks";
+import { getBgColor } from "../../utils/bgColor";
 
 type Props = {
   dataTask: TaskType;
@@ -25,6 +31,13 @@ const Accordion = ({ dataTask }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>(dataTask.description);
+  const [anchorElBookmark, setAnchorElBookmark] =
+    useState<HTMLButtonElement | null>(null);
+
+  const [selectedBookmark, setSelectedBookmark] = useState<string[]>([]);
+  console.log(selectedBookmark);
 
   const handleClickAccordion = () => {
     setIsOpen(!isOpen);
@@ -34,16 +47,44 @@ const Accordion = ({ dataTask }: Props) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleClickBookmark = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElBookmark(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const handleCloseBookmark = () => {
+    setAnchorElBookmark(null);
+  };
+
   const open = Boolean(anchorEl);
+  const openBookmark = Boolean(anchorElBookmark);
   const id = open ? "simple-popover" : undefined;
+  const idBookmark = openBookmark ? "simple-popover-bookmark" : undefined;
 
   const handleDelete = () => {
     setIsDelete(!isDelete);
   };
+
+  const handleEdit = () => {
+    setIsEdit(!isEdit);
+    if (!isEdit && description === "") {
+      setDescription(dataTask.description);
+    }
+  };
+
+  useEffect(() => {
+    if (!isEdit && description !== "") {
+      setDescription(description);
+    }
+  }, [isEdit, description]);
+
+  // const handleAddBookmark = (value) => {
+  //   selectedValue(value);
+  // }
+
   return (
     <div>
       <Box
@@ -51,6 +92,7 @@ const Accordion = ({ dataTask }: Props) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "start",
+          bgcolor: "white",
         }}
       >
         <Checkbox sx={{ ml: -1, mt: -1 }} />
@@ -63,7 +105,27 @@ const Accordion = ({ dataTask }: Props) => {
             alignItems: "center",
           }}
         >
-          <Typography sx={{ fontWeight: 700, color: `${dataTask?.status === "Expired" ? "#828282" : isDelete ? "#828282" : "#4F4F4F"}`, fontSize: 14, width: "335px", textDecoration: `${dataTask?.status === "Expired" ? "line-through" : isDelete ? "line-through" : "none"}` }}>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              color: `${
+                dataTask?.status === "Expired"
+                  ? "#828282"
+                  : isDelete
+                  ? "#828282"
+                  : "#4F4F4F"
+              }`,
+              fontSize: 14,
+              width: "335px",
+              textDecoration: `${
+                dataTask?.status === "Expired"
+                  ? "line-through"
+                  : isDelete
+                  ? "line-through"
+                  : "none"
+              }`,
+            }}
+          >
             {dataTask.title}
           </Typography>
           <Typography sx={{ fontWeight: 400, fontSize: 14, color: "#EB5757" }}>
@@ -141,11 +203,101 @@ const Accordion = ({ dataTask }: Props) => {
           </Box>
           <Box sx={{ display: "flex", alignItems: "start", gap: 1 }}>
             <IconButton size="small">
-              <EditIcon fontSize="inherit" />
+              <EditIcon
+                sx={{ color: "#2F80ED" }}
+                fontSize="small"
+                onClick={handleEdit}
+              />
             </IconButton>
-            <Typography sx={{ fontWeight: 400, fontSize: 12 }}>
-              {dataTask.description}
-            </Typography>
+            {isEdit ? (
+              <TextField
+                sx={{ width: "100%" }}
+                inputProps={{ style: { fontSize: 12 } }}
+                multiline
+                defaultValue={dataTask.description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            ) : (
+              <Typography sx={{ fontWeight: 400, fontSize: 12 }}>
+                {description}
+              </Typography>
+            )}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              bgcolor: "#F9F9F9",
+            }}
+          >
+            <IconButton size="small" onClick={handleClickBookmark}>
+              <BookmarksOutlinedIcon
+                fontSize="small"
+                sx={{ color: "#2F80ED" }}
+              />
+            </IconButton>
+            <List sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+              {selectedBookmark.map((bookmark, index) => (
+                <ListItem
+                  key={index}
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#4F4F4F",
+                    bgcolor: getBgColor(bookmark),
+                    p: 1,
+                    width: "180px",
+                    borderRadius: 1,
+                  }}
+                >
+                  {bookmark}
+                </ListItem>
+              ))}
+            </List>
+            <Popover
+              id={idBookmark}
+              open={openBookmark}
+              anchorEl={anchorElBookmark}
+              onClose={handleCloseBookmark}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              sx={{ "& .MuiPaper-root": { boxShadow: 0 } }}
+            >
+              {bookmarks.map((bookmark) => {
+                return (
+                  <List sx={{ p: 1 }} key={bookmark.id}>
+                    <ListItem
+                      sx={{
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "#4F4F4F",
+                        bgcolor: getBgColor(bookmark.value),
+                        width: "180px",
+                        p: 1,
+                        borderRadius: 1,
+                      }}
+                      onClick={() => {
+                        setSelectedBookmark((prevBookmarks) => {
+                          if (prevBookmarks.includes(bookmark.value)) {
+                            return prevBookmarks.filter(
+                              (value) => value !== bookmark.value
+                            );
+                          } else {
+                            return [...prevBookmarks, bookmark.value];
+                          }
+                        });
+                      }}
+                    >
+                      {bookmark.title}
+                    </ListItem>
+                  </List>
+                );
+              })}
+            </Popover>
           </Box>
         </Box>
       )}

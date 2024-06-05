@@ -1,4 +1,4 @@
-import { TaskType } from "../Types/task.type";
+import { Bookmark, TaskType } from "../Types/task.type";
 
 export const tasks: TaskType[] = [
   {
@@ -51,3 +51,46 @@ export const tasks: TaskType[] = [
     status: "Expired"
   },
 ];
+
+export const bookmarks: Bookmark[] = [
+  {
+    id: 1,
+    title: "Important ASAP",
+    value: "Important ASAP",
+  },
+  {
+    id: 2,
+    title: "Offline Meeting",
+    value: "Offline Meeting",
+  },
+  {
+    id: 3,
+    title: "Virtual Meeting",
+    value: "Virtual Meeting",
+  },
+  {
+    id: 4,
+    title: "ASAP",
+    value: "ASAP",
+  },
+  {
+    id: 5,
+    title: "Client Related",
+    value: "Client Related",
+  },
+  {
+    id: 6,
+    title: "Self Task",
+    value: "Self Task",
+  },
+  {
+    id: 7,
+    title: "Appointments",
+    value: "Appointments",
+  },
+  {
+    id: 8,
+    title: "Court Related",
+    value: "Court Related",
+  }
+]

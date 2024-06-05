@@ -29,10 +29,12 @@ const style = {
   borderRadius: 1,
   boxShadow: 2,
   paddingY: 2,
+  backgroundColor: "white",
 };
 
 const ModalTask = ({ open, handleClose }: Props) => {
   const [objective, setObjective] = useState("");
+  // const [isLoading, setIsLoading] = useState(true);
 
   const handleChange = (event: SelectChangeEvent) => {
     setObjective(event.target.value as string);

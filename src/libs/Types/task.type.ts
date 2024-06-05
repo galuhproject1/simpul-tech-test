@@ -7,3 +7,9 @@ export type TaskType = {
     objective: string;
     status: string;
 }
+
+export type Bookmark = {
+    id: number;
+    title: string;
+    value: string;
+}
