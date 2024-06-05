@@ -125,11 +125,11 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
             </IconButton>
             <Box>
               <Typography
-                sx={{ fontWeight: 700, fontSize: 14, color: "#2F80ED" }}
+                sx={{ fontWeight: 700, fontSize: 14, color: "#2F80ED", mt: dataDetail?.isGroup ? 0 : 2.5 }}
               >
-                I-589 - AMARKHIL, Obaidullah [Affirmative Filing with ZHN]
+                {dataDetail?.groupName ?? dataDetail?.lastSender}
               </Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: 12 }}>
+              <Typography sx={{ fontWeight: 400, fontSize: 12, visibility: dataDetail?.isGroup ? "visible" : "hidden" }}>
                 3 participants
               </Typography>
             </Box>
@@ -158,7 +158,6 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
               </Divider>
             </Box>
           ))}
-          {/* <Chat sender={sender} /> */}
         </Box>
 
         {/* alert new message*/}
