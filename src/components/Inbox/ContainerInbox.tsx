@@ -10,7 +10,9 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { InboxType } from "../../libs/Types/inbox.type";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import NewMessage from "../Notification/NewMessage";
+import AlertWaiting from "../Notification/AlertWaiting";
+import Chat from "./Chat";
 
 type Props = {
   open: boolean;
@@ -30,7 +32,12 @@ const style = {
 };
 
 const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
-  console.log(dataDetail);
+  // const [inboxByDate, setInboxByDate] = useState([]);
+  // const inbox = dataDetail?.detailInbox.map((item) => {
+  //   setInboxByDate([...inboxByDate, item.date]);
+  // });
+
+  console.log();
   return (
     <Modal
       open={open}
@@ -77,25 +84,31 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
         </Box>
 
         {/* chat */}
-        <Box sx={{ p: 2 }}>
-          <Box>
-            <Typography sx={{ fontWeight: 700, fontSize: 14, textAlign: "end", color: "#9B51E0" }}>You</Typography>
-            <Box sx={{ display: "flex", justifyContent: "end", gap: 1, alignItems: "start" }}>
-                <IconButton size="small">
-                    <MoreHorizIcon fontSize="inherit" />
-                </IconButton>
-            <Box sx={{ width: "70%",bgcolor: "#EEDCFF", borderRadius: 1, p: 1, color: "#4F4F4F" }}>
-              <Typography sx={{ fontWeight: 400, fontSize: 14 }}>
-                No worries. It will be completed ASAP. I’ve asked him yesterday.
-              </Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: 12 }}>19:02</Typography>
+        <Box sx={{ p: 2, overflow: "auto", height: 300 }}>
+          {dataDetail?.detailInbox.map((day, index) => (
+            <Box key={index}>
+              {day?.detailInbox.map((item, index) => (
+                <Chat
+                  key={index}
+                  sender={item.sender}
+                  message={item.message}
+                />
+              ))}
+              <Divider
+                sx={{ my: 2, color: "#4F4F4F", fontWeight: 500, fontSize: 14 }}
+              >
+                {day.date}
+              </Divider>
             </Box>
-            </Box>
-          </Box>
-
-          {/* divider */}
-          <Divider>Today June 09, 2021</Divider>
+          ))}
+          {/* <Chat sender={sender} /> */}
         </Box>
+
+        {/* alert new message*/}
+        <NewMessage display="hidden" />
+
+        {/* alert waiting */}
+        <AlertWaiting isLoading={false} />
 
         {/* text field */}
         <Box
@@ -116,7 +129,7 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
             }}
             size="small"
           />
-          <Button variant="contained">
+          <Button variant="contained" sx={{ textTransform: "none", px: 2.5 }}>
             <Typography>Send</Typography>
           </Button>
         </Box>

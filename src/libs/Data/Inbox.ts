@@ -10,17 +10,46 @@ export const dataInbox: InboxType[] = [
     messageType: "group",
     isGroup: true,
     groupName: "109220-Naturalization",
-    read: true,
+    read: false,
     detailInbox: [
       {
-        date: "January 1,2021",
+        date: "June, 08 2021",
         detailInbox: [
           {
             id: 1,
             sender: "Cameron Phillips :",
-            message: "Please check this out!",
-            date: "January 1,2021 19:10",
+            message: "Just Fill me in for his updates yea?",
+            date: "June, 09 2021 19:10",
           },
+        ],
+      },
+      {
+        date: "June, 09 2021",
+        detailInbox: [
+          {
+            id: 1,
+            sender: "You",
+            message: "No worries. It will be completed ASAP. I’ve asked him yesterday.",
+            date: "June, 09 2021 19:11",
+          },
+          {
+            id: 2,
+            sender: "Mary Hilda",
+            message: "Hello Obaidullah, I will be your case advisor for case #029290. I have assigned some homework for you to fill. Please keep up with the due dates. Should you have any questions, you can message me anytime. Thanks.",
+            date: "June, 09 2021 19:12",
+          },
+          {
+            id: 3,
+            sender: "You",
+            message: "Please contact Mary for questions regarding the case bcs she will be managing your forms from now on! Thanks Mary.",
+            date: "June, 09 2021 19:13",
+          },
+          {
+            id: 4,
+            sender: "Mary Hilda",
+            message: "Sure thing ,Claren.",
+            date: "June, 09 2021 19:14",
+          }
         ],
       },
     ],
@@ -35,7 +64,7 @@ export const dataInbox: InboxType[] = [
     isGroup: true,
     groupName:
       "Jeannette Moraima Guaman Chamba (Hutto I-589) [ Hutto Follow Up - Brief Service ]",
-    read: false,
+    read: true,
     detailInbox: [
       {
         date: "02/06/2021",
@@ -67,7 +96,7 @@ export const dataInbox: InboxType[] = [
     messageType: "group",
     isGroup: true,
     groupName: "8405-Diana SALAZAR MUNGUIA",
-    read: false,
+    read: true,
     detailInbox: [
       {
         date: "01/06/2021 12:19",
