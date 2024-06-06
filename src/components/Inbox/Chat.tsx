@@ -14,8 +14,12 @@ type Props = {
   sender: string | undefined;
   message: string | undefined;
   date: string;
+  replyTo?: { sender: string | undefined; message: string | undefined } | null; // Menambahkan informasi pesan yang di-reply
+  onReply: (sender: string | undefined, message: string | undefined) => void;
+  isSendReply?: boolean;
 };
-const Chat = ({ sender, message, date }: Props) => {
+const Chat = ({ sender, message, date, replyTo, onReply, isSendReply }: Props) => {
+  console.log(isSendReply)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElChat, setAnchorElChat] = useState<HTMLDivElement | null>(null);
 
@@ -24,10 +28,9 @@ const Chat = ({ sender, message, date }: Props) => {
   };
 
   const handleClickChat = (event: React.MouseEvent<HTMLDivElement>) => {
-    if(anchorElChat !== null){
-    setAnchorElChat(null);
-    }
-    else{
+    if (anchorElChat !== null) {
+      setAnchorElChat(null);
+    } else {
       setAnchorElChat(event.currentTarget);
     }
   };
@@ -52,6 +55,25 @@ const Chat = ({ sender, message, date }: Props) => {
       >
         {sender}
       </Typography>
+
+      {replyTo && (
+        <Box sx={{ display: "flex", justifyContent: sender === "You" ? "end" : "start" }}>
+          <Box
+            sx={{
+              width: "70%",
+              bgcolor: "#F2F2F2",
+              p: 1,
+              mb: 1,
+              borderRadius: 1,
+            }}
+          >
+            <Typography sx={{ fontSize: 14, color: "#4F4F4F" }}>
+              {replyTo.message}
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
       <Box
         sx={{
           display: "flex",
@@ -130,7 +152,10 @@ const Chat = ({ sender, message, date }: Props) => {
                 Share
               </Button>
               <Divider />
-              <Button sx={{ color: "#2F80ED", textTransform: "none" }}>
+              <Button
+                sx={{ color: "#2F80ED", textTransform: "none" }}
+                onClick={() => onReply(sender, message)}
+              >
                 Reply
               </Button>
             </Box>

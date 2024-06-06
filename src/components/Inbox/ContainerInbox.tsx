@@ -37,7 +37,13 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState(dataDetail?.detailInbox);
   const [showNotification, setShowNotification] = useState("hidden");
-  
+
+  //reply message
+  const [isReply, setIsReply] = useState(false);
+  const [senderReply, setSenderReply] = useState<string | undefined>();
+  const [messageReply, setMessageReply] = useState<string | undefined>();
+  const [isSendReply, setIsSendReply] = useState(false);
+
   useEffect(() => {
     if (open && dataDetail) {
       setIsLoading(true);
@@ -52,7 +58,7 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
 
   const handleScroll = () => {
     setShowNotification("hidden");
-  }
+  };
 
   const handleSendMessage = () => {
     if (message) {
@@ -61,18 +67,15 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
         sender: "You",
         message,
         date: new Date().toLocaleTimeString(),
+        replyTo: isReply ? { sender: senderReply || '', message: messageReply ?? '' } : undefined,
       };
-      console.log(newMessage?.date);
-
-      // Update chat messages state
-      setChatMessages((prevMessages) => {
+  
+      setChatMessages(prevMessages => {
         if (prevMessages) {
           const updatedMessages = [...prevMessages];
-          // Assuming the new message should go to the latest date group
           if (updatedMessages.length > 0) {
             updatedMessages[updatedMessages.length - 1].detailInbox.push(newMessage);
           } else {
-            // Create a new date group if no messages exist
             updatedMessages.push({
               date: new Date().toLocaleDateString(),
               detailInbox: [newMessage],
@@ -80,20 +83,29 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
           }
           return updatedMessages;
         } else {
-          return []; // Return an empty array if prevMessages is undefined
+          return [];
         }
       });
-
+  
       setMessage("");
+      // Hanya set isSendReply menjadi true jika sedang dalam mode reply
+      if (isReply) {
+        setIsSendReply(true);
+      }
+      // Reset state reply setelah mengirim pesan
+      setSenderReply(undefined);
+      setMessageReply(undefined);
+      setIsReply(false);
     }
   };
+  
 
   useEffect(() => {
     if (open && dataDetail) {
       setChatMessages(dataDetail.detailInbox);
     }
   }, [dataDetail, open]);
-  
+
   return (
     <Modal
       open={open}
@@ -120,44 +132,79 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
           }}
         >
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <IconButton onClick={handleClose}>
+            <IconButton onClick={() => {
+              handleClose();
+              setIsReply(false)
+              setIsSendReply(false)
+            }}>
               <ArrowBackIcon />
             </IconButton>
             <Box>
               <Typography
-                sx={{ fontWeight: 700, fontSize: 14, color: "#2F80ED", mt: dataDetail?.isGroup ? 0 : 2.5 }}
+                sx={{
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: "#2F80ED",
+                  mt: dataDetail?.isGroup ? 0 : 2.5,
+                }}
               >
                 {dataDetail?.groupName ?? dataDetail?.lastSender}
               </Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: 12, visibility: dataDetail?.isGroup ? "visible" : "hidden" }}>
+              <Typography
+                sx={{
+                  fontWeight: 400,
+                  fontSize: 12,
+                  visibility: dataDetail?.isGroup ? "visible" : "hidden",
+                }}
+              >
                 3 participants
               </Typography>
             </Box>
           </Box>
-          <IconButton onClick={handleClose}>
+          <IconButton onClick={() => {
+            handleClose();
+            setIsReply(false)
+              setIsSendReply(false)
+          }}>
             <CloseIcon />
           </IconButton>
         </Box>
 
         {/* chat */}
-        <Box sx={{ p: 2, overflow: "auto", height: 300 }} onScroll={handleScroll}>
-          {chatMessages && chatMessages.map((day, index) => (
-            <Box key={index}>
-              {day?.detailInbox.map((item, index) => (
-                <Chat
-                  key={index}
-                  sender={item.sender}
-                  message={item.message}
-                  date={item.date}
-                />
-              ))}
-              <Divider
-                sx={{ my: 2, color: "#4F4F4F", fontWeight: 500, fontSize: 14 }}
-              >
-                {day.date}
-              </Divider>
-            </Box>
-          ))}
+        <Box
+          sx={{ p: 2, overflow: "auto", height: 300 }}
+          onScroll={handleScroll}
+        >
+          {chatMessages &&
+            chatMessages.map((day, dayIndex) => (
+              <Box key={dayIndex}>
+                {day?.detailInbox.map((item, messageIndex) => (
+                  <Chat
+                    key={messageIndex}
+                    sender={item.sender}
+                    message={item.message}
+                    date={item.date}
+                    replyTo={item.replyTo} // Menambahkan informasi pesan yang di-reply
+                    onReply={(sender, message) => {
+                      setIsReply(true);
+                      setSenderReply(sender);
+                      setMessageReply(message);
+                    }}
+                    isSendReply={isSendReply}
+                  />
+                ))}
+                <Divider
+                  sx={{
+                    my: 2,
+                    color: "#4F4F4F",
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
+                >
+                  {day.date}
+                </Divider>
+              </Box>
+            ))}
         </Box>
 
         {/* alert new message*/}
@@ -178,16 +225,59 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
             gap: 2,
           }}
         >
-          <TextField
-            placeholder="Type a new message"
+          <Box sx={{ width: "100%" }}>
+            <Box
+              sx={{
+                width: "86%",
+                bgcolor: "#F2F2F2",
+                p: 1,
+                outline: "1px solid #4F4F4F",
+                borderTopLeftRadius: 5,
+                borderTopRightRadius: 5,
+                visibility: isReply ? "visible" : "hidden",
+              }}
+            >
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography
+                  sx={{ fontWeight: 700, fontSize: 12, color: "#4F4F4F" }}
+                >
+                  {senderReply}
+                </Typography>
+                <IconButton size="small" onClick={() => setIsReply(false)}>
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              </Box>
+              <Typography
+                sx={{ fontWeight: 400, fontSize: 12, color: "#4F4F4F" }}
+              >
+                {messageReply}
+              </Typography>
+            </Box>
+            <TextField
+              placeholder="Type a new message"
+              sx={{
+                width: "86%",
+                outline: isReply ? "1px solid #4F4F4F" : "none",
+                borderBottomLeftRadius: isReply ? 5 : 0,
+                borderBottomRightRadius: isReply ? 5 : 0,
+              }}
+              size="small"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+          </Box>
+          <Button
+            variant="contained"
             sx={{
-              width: "100%",
+              textTransform: "none",
+              px: 2.5,
+              height: "40px",
+              bottom: 0,
+              right: 22,
+              position: "absolute",
             }}
-            size="small"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button variant="contained" sx={{ textTransform: "none", px: 2.5 }} onClick={handleSendMessage}>
+            onClick={handleSendMessage}
+          >
             <Typography>Send</Typography>
           </Button>
         </Box>

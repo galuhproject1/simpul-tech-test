@@ -23,4 +23,10 @@ type DetailInboxType = {
   sender: string;
   message: string;
   date: string;
+  replyTo?: ReplyType;
+};
+
+type ReplyType = {
+  sender: string;
+  message: string;
 };
