@@ -1,5 +1,6 @@
 import {
   Box,
+  IconButton,
   InputAdornment,
   Modal,
   TextField,
@@ -7,6 +8,8 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import ListInbox from "../Inbox/ListInbox";
 import { dataInbox } from "../../libs/Data/Inbox";
+import { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Props = {
   open: boolean;
@@ -27,7 +30,46 @@ const style = {
 };
 
 const ModalInbox = ({ open, handleClose, handleOpenInbox }: Props) => {
-  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState(dataInbox);
+  const [debounceTimeout, setDebounceTimeout] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSearchQuery(value);
+
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    const newTimeout = setTimeout(() => {
+      const filtered = dataInbox.filter(
+        (item) =>
+          item.lastSender.toLowerCase().includes(value.toLowerCase()) ||
+          (item.groupName &&
+            item.groupName.toLowerCase().includes(value.toLowerCase()))
+      );
+      setFilteredData(filtered);
+    }, 3000);
+
+    setDebounceTimeout(newTimeout);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+    };
+  }, [debounceTimeout]);
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setFilteredData(dataInbox);
+  };
+
   return (
     <Modal
       open={open}
@@ -42,11 +84,17 @@ const ModalInbox = ({ open, handleClose, handleOpenInbox }: Props) => {
     >
       <Box sx={style}>
         <TextField
-        placeholder="Search"
+          placeholder="Search"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
+              <InputAdornment position="end">
+                {searchQuery ? (
+                  <IconButton onClick={clearSearch}>
+                    <CloseIcon />
+                  </IconButton>
+                ) : (
+                  <SearchIcon />
+                )}
               </InputAdornment>
             ),
           }}
@@ -55,8 +103,13 @@ const ModalInbox = ({ open, handleClose, handleOpenInbox }: Props) => {
             paddingX: 2,
           }}
           size="small"
+          value={searchQuery}
+          onChange={handleSearchChange}
         />
-        <ListInbox handleOpenInbox={(id: number) => handleOpenInbox(id)} dataInbox={dataInbox} />
+        <ListInbox
+          handleOpenInbox={(id: number) => handleOpenInbox(id)}
+          dataInbox={filteredData}
+        />
       </Box>
     </Modal>
   );
