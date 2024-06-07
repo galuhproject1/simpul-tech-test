@@ -23,6 +23,7 @@ const style = {
   borderRadius: 1,
   boxShadow: 2,
   paddingY: 2,
+  backgroundColor: "white",
 };
 
 const ModalInbox = ({ open, handleClose, handleOpenInbox }: Props) => {

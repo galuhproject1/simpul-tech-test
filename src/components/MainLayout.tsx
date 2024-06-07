@@ -7,11 +7,11 @@ type Props = {
 
 const MainLayout = ({ children }: Props) => {
   return (
-    <div className="w-full h-screen bg-slate-300 flex">
+    <div className="w-full h-screen bg-slate-400 flex">
       <div className="w-1/6 bg-slate-200 border-r border-slate-300">
         Navigation
       </div>
-      <div className="w-5/6 bg-slate-100">
+      <div className="w-5/6 bg-slate-400">
         <TextField
           InputProps={{
             startAdornment: (

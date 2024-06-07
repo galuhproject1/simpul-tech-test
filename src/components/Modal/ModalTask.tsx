@@ -37,6 +37,8 @@ const ModalTask = ({ open, handleClose }: Props) => {
   const [objective, setObjective] = useState("");
   const [taskByObjective, setTaskByObjective] = useState(tasks);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdd, setIsAdd] = useState(false);
+  const [newTaskId, setNewTaskId] = useState<number | null>(null);
 
   const handleChange = (event: SelectChangeEvent) => {
     setObjective(event.target.value as string);
@@ -53,6 +55,23 @@ const ModalTask = ({ open, handleClose }: Props) => {
       setTaskByObjective(tasks.filter((task) => task.objective === objective));
     }
   }, [objective]);
+
+  useEffect(() => {
+    if (isAdd) {
+      const newTask = {
+        id: taskByObjective.length + 1,
+        objective: objective || "Personal Errands",
+        description: "No Description",
+        title: "New Task Title",
+        dueDate: "",
+        date: "",
+        status: "On going",
+      };
+      setTaskByObjective((prevTasks) => [...prevTasks, newTask]);
+      setNewTaskId(newTask.id);
+      setIsAdd(false); // Reset isAdd to false after adding the task
+    }
+  }, [isAdd, objective, taskByObjective]);
 
   return (
     <Modal
@@ -101,6 +120,9 @@ const ModalTask = ({ open, handleClose }: Props) => {
             variant="contained"
             size="small"
             sx={{ height: 30, textTransform: "none" }}
+            onClick={() => {
+              setIsAdd(true);
+            }}
           >
             New Task
           </Button>
@@ -110,9 +132,9 @@ const ModalTask = ({ open, handleClose }: Props) => {
         <Box sx={{ height: 300, overflow: "auto" }}>
           {isLoading && <Loading loadingFor="Tasks List" />}
           {taskByObjective.map((task) => (
-            <List sx={{ width: "100%", cursor: "pointer" }} key={task.id}>
-              <ListItem button>
-                <Accordion dataTask={task} />
+            <List sx={{ width: "100%", cursor: "pointer", "&:hover": { bgcolor: "white"} }} key={task.id}>
+              <ListItem button sx={{ "&:hover": { bgcolor: "white"}}}>
+                <Accordion dataTask={task} isAdd={newTaskId === task.id} />
               </ListItem>
               <Divider variant="middle" />
             </List>

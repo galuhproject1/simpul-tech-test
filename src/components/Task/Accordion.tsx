@@ -26,8 +26,9 @@ import { getBgColor } from "../../utils/bgColor";
 
 type Props = {
   dataTask: TaskType;
+  isAdd: boolean;
 };
-const Accordion = ({ dataTask }: Props) => {
+const Accordion = ({ dataTask, isAdd }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [isDelete, setIsDelete] = useState<boolean>(false);
@@ -37,10 +38,17 @@ const Accordion = ({ dataTask }: Props) => {
     useState<HTMLButtonElement | null>(null);
 
   const [selectedBookmark, setSelectedBookmark] = useState<string[]>([]);
+  const [title, setTitle] = useState<string>(dataTask.title);
 
   const handleClickAccordion = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    if (isAdd) {
+      setIsOpen(true);
+    }
+  }, [isAdd]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -100,6 +108,15 @@ const Accordion = ({ dataTask }: Props) => {
             alignItems: "center",
           }}
         >
+          {isAdd ? (
+            <TextField
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              sx={{ width: "335px" }}
+              placeholder="Type Task Title"
+            />
+          ) : (
+
           <Typography
             sx={{
               fontWeight: 700,
@@ -123,6 +140,7 @@ const Accordion = ({ dataTask }: Props) => {
           >
             {dataTask.title}
           </Typography>
+          )}
           <Typography sx={{ fontWeight: 400, fontSize: 14, color: "#EB5757" }}>
             {dataTask.dueDate}
           </Typography>
@@ -192,7 +210,7 @@ const Accordion = ({ dataTask }: Props) => {
               <DatePicker
                 value={dataTask.date ? dayjs(dataTask.date) : null}
                 sx={{ width: "30%" }}
-                slotProps={{ textField: { size: "small" } }}
+                slotProps={{ textField: { size: "small", placeholder: "Set Date" } }}
               />
             </LocalizationProvider>
           </Box>
@@ -204,7 +222,7 @@ const Accordion = ({ dataTask }: Props) => {
                 onClick={handleEdit}
               />
             </IconButton>
-            {isEdit ? (
+            {isEdit || description === "No Description" ? (
               <TextField
                 sx={{ width: "100%" }}
                 inputProps={{ style: { fontSize: 12 } }}
@@ -224,6 +242,7 @@ const Accordion = ({ dataTask }: Props) => {
               alignItems: "center",
               gap: 1,
               bgcolor: "#F9F9F9",
+              width: "640px"
             }}
           >
             <IconButton size="small" onClick={handleClickBookmark}>
@@ -232,7 +251,7 @@ const Accordion = ({ dataTask }: Props) => {
                 sx={{ color: "#2F80ED" }}
               />
             </IconButton>
-            <List sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+            <List sx={{ display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap" }}>
               {selectedBookmark.map((bookmark, index) => (
                 <ListItem
                   button
