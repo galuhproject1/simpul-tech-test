@@ -14,12 +14,10 @@ type Props = {
   sender: string | undefined;
   message: string | undefined;
   date: string;
-  replyTo?: { sender: string | undefined; message: string | undefined } | null; // Menambahkan informasi pesan yang di-reply
+  replyTo?: { sender: string | undefined; message: string | undefined } | null;
   onReply: (sender: string | undefined, message: string | undefined) => void;
-  isSendReply?: boolean;
 };
-const Chat = ({ sender, message, date, replyTo, onReply, isSendReply }: Props) => {
-  console.log(isSendReply)
+const Chat = ({ sender, message, date, replyTo, onReply }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElChat, setAnchorElChat] = useState<HTMLDivElement | null>(null);
 
@@ -121,6 +119,7 @@ const Chat = ({ sender, message, date, replyTo, onReply, isSendReply }: Props) =
           sx={{
             cursor: "pointer",
             width: "70%",
+            height: "auto",
             bgcolor: sender ? getBgColorChat(sender) : "#FFFFFF",
             borderRadius: 1,
             p: 1,
@@ -160,10 +159,10 @@ const Chat = ({ sender, message, date, replyTo, onReply, isSendReply }: Props) =
               </Button>
             </Box>
           </Popover>
-          <Typography sx={{ fontWeight: 400, fontSize: 14, textAlign: "left" }}>
+          <Typography sx={{ fontWeight: 400, fontSize: 14, textAlign: "left", width: "100%", overflowWrap: "break-word" }}>
             {message}
           </Typography>
-          <Typography sx={{ fontWeight: 400, fontSize: 12 }}>{date}</Typography>
+          <Typography sx={{ fontWeight: 400, fontSize: 12, textAlign: "left" }}>{date}</Typography>
         </Box>
       </Box>
     </Box>

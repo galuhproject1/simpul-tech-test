@@ -42,7 +42,6 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
   const [isReply, setIsReply] = useState(false);
   const [senderReply, setSenderReply] = useState<string | undefined>();
   const [messageReply, setMessageReply] = useState<string | undefined>();
-  const [isSendReply, setIsSendReply] = useState(false);
 
   useEffect(() => {
     if (open && dataDetail) {
@@ -88,11 +87,6 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
       });
   
       setMessage("");
-      // Hanya set isSendReply menjadi true jika sedang dalam mode reply
-      if (isReply) {
-        setIsSendReply(true);
-      }
-      // Reset state reply setelah mengirim pesan
       setSenderReply(undefined);
       setMessageReply(undefined);
       setIsReply(false);
@@ -135,7 +129,6 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
             <IconButton onClick={() => {
               handleClose();
               setIsReply(false)
-              setIsSendReply(false)
             }}>
               <ArrowBackIcon />
             </IconButton>
@@ -164,7 +157,6 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
           <IconButton onClick={() => {
             handleClose();
             setIsReply(false)
-              setIsSendReply(false)
           }}>
             <CloseIcon />
           </IconButton>
@@ -190,7 +182,7 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
                       setSenderReply(sender);
                       setMessageReply(message);
                     }}
-                    isSendReply={isSendReply}
+                    // isSendReply={isSendReply}
                   />
                 ))}
                 <Divider
