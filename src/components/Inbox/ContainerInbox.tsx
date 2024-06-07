@@ -170,6 +170,18 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
           {chatMessages &&
             chatMessages.map((day, dayIndex) => (
               <Box key={dayIndex}>
+                <Divider
+                  sx={{
+                    my: 2,
+                    color: day?.date == "New Message" ? "#EB5757" : "#4F4F4F",
+                    fontWeight: 500,
+                    fontSize: 14,
+                    "&::before": {backgroundColor: day?.date == "New Message" ? "#EB5757" : "#4F4F4F"},
+                    "&::after": {backgroundColor: day?.date == "New Message" ? "#EB5757" : "#4F4F4F"},
+                  }}
+                >
+                  {day.date}
+                </Divider>
                 {day?.detailInbox.map((item, messageIndex) => (
                   <Chat
                     key={messageIndex}
@@ -185,16 +197,7 @@ const ContainerInbox = ({ open, handleClose, dataDetail }: Props) => {
                     // isSendReply={isSendReply}
                   />
                 ))}
-                <Divider
-                  sx={{
-                    my: 2,
-                    color: "#4F4F4F",
-                    fontWeight: 500,
-                    fontSize: 14,
-                  }}
-                >
-                  {day.date}
-                </Divider>
+                
               </Box>
             ))}
         </Box>

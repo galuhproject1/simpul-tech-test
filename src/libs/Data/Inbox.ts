@@ -53,7 +53,7 @@ export const dataInbox: InboxType[] = [
         ],
       },
       {
-        date: "June, 10 2021",
+        date: "New Message",
         detailInbox: [
           {
             id: 1,
